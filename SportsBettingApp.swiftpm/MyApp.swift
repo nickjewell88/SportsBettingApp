@@ -18,8 +18,8 @@ struct ContentView: View {
 struct BaseballToolsView: View {
     var body: some View {
         VStack {
-            // TODO: Add Expected Runs Calculator UI
-            // TODO: Add True Average Calculator UI
+            // TODO: Add Expected Runs Calculator
+            // TODO: Add True Average Calculator
         }
         .navigationBarTitle("Baseball Tools")
     }
@@ -27,7 +27,7 @@ struct BaseballToolsView: View {
 
 struct BasketballToolView: View {
     var body: some View {
-        // TODO: Add Basketball Tool UI
+        // TODO: Add Basketball Tool 
         Text("Basketball Tool")
             .navigationBarTitle("Basketball Tool")
     }

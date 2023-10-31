@@ -27,7 +27,7 @@ struct BaseballToolsView: View {
 
 struct BasketballToolView: View {
     var body: some View {
-        // TODO: Add Basketball Tool 
+        // TODO: Add Basketball Tool
         Text("Basketball Tool")
             .navigationBarTitle("Basketball Tool")
     }

@@ -1,4 +1,88 @@
+
 import SwiftUI
+
+// Bet data model
+struct Bet: Identifiable, Codable {
+    var id: UUID = UUID()
+    
+    var teamName: String
+    var amount: Double
+    var predictedOutcome: String
+}
+
+// View model for the BetTrackerView
+class BetTrackerViewModel: ObservableObject {
+    @Published var bets: [Bet] = [] {
+        didSet {
+            saveBets()
+        }
+    }
+    
+    init() {
+        loadBets()
+    }
+    
+    func addBet(teamName: String, amount: Double, predictedOutcome: String) {
+        let newBet = Bet(teamName: teamName, amount: amount, predictedOutcome: predictedOutcome)
+        bets.append(newBet)
+    }
+    
+    func saveBets() {
+        if let encoded = try? JSONEncoder().encode(bets) {
+            UserDefaults.standard.set(encoded, forKey: "SavedBets")
+        }
+    }
+    
+    func loadBets() {
+        if let savedBets = UserDefaults.standard.data(forKey: "SavedBets"),
+           let decodedBets = try? JSONDecoder().decode([Bet].self, from: savedBets) {
+            bets = decodedBets
+        }
+    }
+}
+
+struct BetTrackerView: View {
+    @StateObject private var viewModel = BetTrackerViewModel()
+    @State private var teamName: String = ""
+    @State private var amountText: String = ""
+    @State private var predictedOutcome: String = ""
+    
+    var body: some View {
+        VStack {
+            TextField("Team Name", text: $teamName)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+            
+            TextField("Bet Amount", text: $amountText)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .keyboardType(.decimalPad)
+                .padding()
+            
+            TextField("Predicted Outcome", text: $predictedOutcome)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+            
+            Button("Add Bet") {
+                if let amount = Double(amountText) {
+                    viewModel.addBet(teamName: teamName, amount: amount, predictedOutcome: predictedOutcome)
+                    teamName = ""
+                    amountText = ""
+                    predictedOutcome = ""
+                }
+            }
+            .padding()
+            
+            List(viewModel.bets) { bet in
+                VStack(alignment: .leading) {
+                    Text(bet.teamName).font(.headline)
+                    Text("Bet Amount: $\(bet.amount, specifier: "%.2f")")
+                    Text("Predicted Outcome: \(bet.predictedOutcome)")
+                }
+            }
+        }
+        .navigationBarTitle("Bet Tracker")
+    }
+}
 
 struct ContentView: View {
     var body: some View {
@@ -38,16 +122,6 @@ struct CostanzaView: View {
         // TODO: Add Costanza UI
         Text("Costanza")
             .navigationBarTitle("Costanza")
-    }
-}
-
-struct BetTrackerView: View {
-    var body: some View {
-        VStack {
-            // TODO: Add Bet Input UI
-            // TODO: Add History Viewer UI
-        }
-        .navigationBarTitle("Bet Tracker")
     }
 }
 

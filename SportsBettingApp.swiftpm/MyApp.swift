@@ -90,7 +90,7 @@ struct ContentView: View {
                 NavigationLink("Basketball Tool", destination: BasketballToolView())
                 NavigationLink("Costanza", destination: CostanzaView())
                 NavigationLink("Bet Tracker", destination: BetTrackerView())
-                NavigationLink("User Profile", destination: UserProfileView())
+            
             }
             .navigationBarTitle("SportsBet Assistant")
         }
@@ -193,21 +193,54 @@ struct BasketballToolView: View {
 }
 
 
-struct CostanzaView: View {
+struct CostanzaView:  View {
+    @State private var teamOne: String = ""
+    @State private var teamTwo: String = ""
+    @State private var userPrediction: String = ""
+    @State private var costanzaPrediction: String = ""
+
     var body: some View {
-        // TODO: Add Costanza UI
-        Text("Costanza")
-            .navigationBarTitle("Costanza")
+        VStack {
+            Text("If every instinct you have is wrong")
+                .font(.headline)
+                .padding()
+
+            Text("Then the opposite must be....")
+                .multilineTextAlignment(.center)
+                .padding()
+
+            TextField("Team One", text: $teamOne)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+
+            TextField("Team Two", text: $teamTwo)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+
+            TextField("Your Winner", text: $userPrediction)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+
+            Button("What would Costanza do?") {
+                if userPrediction.lowercased() == teamOne.lowercased() {
+                    costanzaPrediction = teamTwo
+                } else if userPrediction.lowercased() == teamTwo.lowercased() {
+                    costanzaPrediction = teamOne
+                } else {
+                    costanzaPrediction = "Enter a team listed above for a prediction."
+                }
+            }
+            .padding()
+
+            if !costanzaPrediction.isEmpty {
+                Text("Costanza's pick: \(costanzaPrediction)")
+                    .padding()
+            }
+        }
+        .navigationBarTitle("Costanza")
     }
 }
 
-struct UserProfileView: View {
-    var body: some View {
-        // TODO: Add User Profile UI
-        Text("User Profile")
-            .navigationBarTitle("User Profile")
-    }
-}
 
 @main
 struct SportsBetAssistantApp: App {
